@@ -2,16 +2,23 @@ package com.alpha.agenda.config;
 
 import com.alpha.agenda.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import org.springframework.http.HttpMethod;
+
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+
 import org.springframework.security.config.http.SessionCreationPolicy;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
@@ -34,6 +41,7 @@ public class SecurityConfig {
     ) throws Exception {
 
         http
+
                 .cors(cors -> cors.configurationSource(request -> {
 
                     CorsConfiguration config =
@@ -72,8 +80,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         .requestMatchers(
-                                "/api/auth/register",
-                                "/api/auth/login"
+                                "/auth/register",
+                                "/auth/login"
                         ).permitAll()
 
                         .requestMatchers(
