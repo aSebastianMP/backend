@@ -24,18 +24,25 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http
+    ) throws Exception {
 
         http
                 .cors(cors -> cors.configurationSource(request -> {
 
-                    CorsConfiguration config = new CorsConfiguration();
+                    CorsConfiguration config =
+                            new CorsConfiguration();
 
-                    config.setAllowedOrigins(List.of("http://localhost:3000"));
+                    config.setAllowedOrigins(List.of(
+                            "http://localhost:3000",
+                            "https://frontend-tau-five-49.vercel.app"
+                    ));
 
                     config.setAllowedMethods(List.of(
                             "GET",
@@ -45,23 +52,38 @@ public class SecurityConfig {
                             "OPTIONS"
                     ));
 
-                    config.setAllowedHeaders(List.of("*"));
+                    config.setAllowedHeaders(
+                            List.of("*")
+                    );
 
                     config.setAllowCredentials(true);
 
                     return config;
                 }))
+
                 .csrf(AbstractHttpConfigurer::disable)
+
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS
+                        )
                 )
+
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(
-                                "/auth/register",
-                                "/auth/login"
+                                "/api/auth/register",
+                                "/api/auth/login"
                         ).permitAll()
+
+                        .requestMatchers(
+                                HttpMethod.OPTIONS,
+                                "/**"
+                        ).permitAll()
+
                         .anyRequest().authenticated()
                 )
+
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
